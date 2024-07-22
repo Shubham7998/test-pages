@@ -1,0 +1,94 @@
+
+
+
+body {
+  font-family: 'Nunito', sans-serif !important;
+}
+
+.sidebar {
+  width: 100%;
+  margin: 0 auto;
+  font-weight: 550;
+   // justify-content: space-between;
+  // display: flex;
+  // text-decoration: none;
+  // align-items: center;
+  // background-color: #3dcd58;
+  // font-size: 875rem;
+  // font-weight: 700;
+  // color: white;
+  // padding: 8px 16px;
+ 
+}
+span{
+  font-size: medium;
+  // font-weight: 550;
+}
+.accordion {
+  background-color: #f1f1f1;
+  //border: 1px solid #ccc;
+ // border-radius: 4px;
+  // margin-bottom: 10px;
+}
+
+.accordion-header {
+  background-color: #ffffff;
+  padding: 10px;
+  padding-left: 30px;
+  cursor: pointer;
+ 
+  // border: none !important;
+ 
+}
+
+.accordion-content {
+  display: none;
+  // padding: 10px;
+  border-top: 1px solid #ffffff;
+}
+
+.accordion-content.active {
+  display: block;
+}
+
+.accordion ul {
+  cursor: pointer;
+  list-style-type: none;
+
+}
+
+.accordion li{
+  cursor: pointer;
+  display: flex;
+  background-color: #ffffff;
+  margin: 0;
+  // padding-left: 30px;
+  text-align: center;
+  padding: 10px 5px;
+  // width: 100%;
+  font-size: 16px;
+  // font-weight: 550;
+  justify-content: left;
+  border: none;
+}
+
+.accordion a {
+
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+
+}
+
+// .accordion a.activeData {
+//   font-weight: bold;
+// }
+
+.activeData {
+  font-weight: bold;
+   width: 100%;
+  // width: auto;
+  background-color: #3dcd58 !important;
+  border: none;
+  color:white;
+}

@@ -1,0 +1,92 @@
+.custom-textarea {
+  height: 200px;
+  resize: vertical;
+  margin-bottom: 0 !important;
+  resize: none;
+}
+
+mat-option {
+  padding: 4px;
+  // background-color: red;
+}
+
+.header,.footer{
+  height: 50px;
+}
+
+
+
+.modal-dialog-box {
+  height: 50px !important;
+}
+.modal-title {
+  margin-bottom: 0 !important;
+}
+
+h2 {
+  color: #3dcd58;
+  margin: 4px;
+  margin-bottom: 2px;
+}
+
+span {
+  margin-top: 2px;
+}
+
+
+mat-error {
+  font-size: 13px;
+  font-weight: 200;
+}
+
+::ng-deep
+  .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float
+  .mat-form-field-outline {
+  color: #3dcd58;
+}
+
+::ng-deep
+  .mat-form-field-appearance-outline.mat-focused
+  .mat-form-field-outline-thick {
+  color: #3dcd58;
+}
+
+::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-label {
+  color: #3dcd58;
+}
+
+.pop-up {
+  height: 100px !important;
+}
+
+.modal-body {
+  height: 550px;
+  padding-top:0;
+  padding-bottom: 0;
+  overflow-y: scroll;
+}
+
+.mat-form-field textarea {
+  // background-color: #3dcd58;
+  height: 90px !important;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  border: 1px solid rgb(247, 247, 247);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(174, 174, 173);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #70716f;
+}
+

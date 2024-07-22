@@ -1,0 +1,137 @@
+<!-- <div>
+  <h2>Draft</h2>
+  <div *ngFor="let item of summary">
+    <div *ngIf="item.groupStatus === 'Draft'">
+      <mat-card appearance="outlined" class="card">
+        <mat-card-content> 
+          <table mat-table [dataSource]="summary" class="mat-elevation-z8">
+
+          
+      
+            <ng-container matColumnDef="QuotationName">
+              <th mat-header-cell *matHeaderCellDef> QuotationName. </th>
+              <td mat-cell > {{item.QuotationName}} </td>
+            </ng-container>
+          
+
+            <ng-container matColumnDef="Item Count">
+              <th mat-header-cell *matHeaderCellDef> Item Count </th>
+              <td mat-cell > {{item.SummaryCount}} </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="QuotationName">
+              <th mat-header-cell *matHeaderCellDef> Total Expected Cost </th>
+              <td mat-cell > {{item.TotalExpectationCost}} </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="QuotationName">
+              <th mat-header-cell *matHeaderCellDef> Total List Price </th>
+              <td mat-cell > {{item.TotalCost | currency}} </td>
+            </ng-container>
+          
+          
+           
+          
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+          
+          
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>  -->
+
+
+<!-- <div>
+  <mat-card appearance="outlined" class="card">
+      <mat-card-content>
+        <div class="row">
+          <div class="col-12">
+            <div class="container">
+              <div class="row">
+                <div class="col-6">
+                  <h3>Quotation Name</h3>
+                </div>
+                <div class="col-2">
+                  <h3>Item Count</h3>
+                </div>
+                <div class="col-2">
+                  <h3>Total Expected Cost</h3>
+                </div>
+                <div class="col-2">
+                  <h3>Total List Price</h3>
+                </div>
+              </div>
+  
+              
+              <div class="row">
+                <div *ngFor="let item of summary">
+                  <div *ngIf="item.groupStatus === 'Draft'">
+                    <div class="col-6">
+                      {{ item.QuotationName }}
+                    </div>
+                    <div class="col-2">
+                      {{ item.SummaryCount }}
+                    </div>
+                    <div class="col-2">
+                      {{ item.TotalExpectationCost | currency }}
+                    </div>
+                    <div class="col-2">
+                      {{ item.TotalCost | currency }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  
+    <h2>Publish</h2>
+    <mat-card appearance="outlined" class="card">
+      <mat-card-content>
+        <div class="row">
+          <div class="col-12">
+            <div class="container">
+              <div class="row">
+                <div class="col-6">
+                  <h3>Quotation Name</h3>
+                </div>
+                <div class="col-2">
+                  <h3>Item Count</h3>
+                </div>
+                <div class="col-2">
+                  <h3>Total Expected Cost</h3>
+                </div>
+                <div class="col-2">
+                  <h3>Total List Price</h3>
+                </div>
+              </div>
+              <div class="row">
+                <div *ngFor="let item of summary">
+                  <div *ngIf="item.groupStatus === 'Publish'">
+                    <div class="col-6">
+                      {{ item.QuotationName }}
+                    </div>
+                    <div class="col-2">
+                      {{ item.SummaryCount }}
+                    </div>
+                    <div class="col-2">
+                      {{ item.TotalExpectationCost | currency }}
+                    </div>
+                    <div class="col-2">
+                      {{ item.TotalCost | currency }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div> 
+   -->

@@ -1,0 +1,50 @@
+
+.rowhead {
+  display: flex;
+  height: 80px;
+  background-color: #3dcd58;
+  h5,
+  h6 {
+    margin-bottom: 0.15rem;
+  }
+}
+
+.logo {
+  display: flex;
+  height: 70px;
+  width: 17%;
+}
+
+h6 {
+  text-align: left;
+}
+
+.icon {
+  margin-left: 180%;
+}
+
+a {
+  text-decoration: none;
+  color: rgb(248, 248, 248);
+  font-weight: 650;
+
+    
+}
+
+a:hover{
+    text-decoration: underline;
+    
+}
+
+.label1 {
+  font-size: 18px;
+  padding-top: 11px;
+  padding-bottom: 4px;
+}
+
+.label2 {
+   
+  font-size: 21px;
+  padding-right: 1px;
+  font-weight: 500;
+}

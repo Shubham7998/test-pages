@@ -1,0 +1,482 @@
+<div>
+  <div
+    class="modal fade"
+    id="exampleModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header header">
+          <h2 class="modal-title fs-5" id="exampleModalLabel">New Quotation</h2>
+          <button
+            id="closeBtn"
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            (click)="closeScreen()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <h2 >Details</h2>
+        
+          <form [formGroup]="QuotationForm" (ngSubmit)="onSubmit($event)">
+            <div class="row">
+              <div class="col-8 quotataion">
+                <mat-form-field appearance="outline" class="w-100 input-field">
+                  <mat-label>Quotation Name</mat-label>
+                  <input
+                    class="small-input"
+                    matInput
+                    name="quotationName"
+                    formControlName="QuotationName"
+                    required
+                  />
+                  <mat-error>
+                    <div
+                      *ngIf="
+                        QuotationForm.hasError('required', 'QuotationName')
+                      "
+                    >
+                      Quotation Name is required
+                    </div>
+
+                    <div
+                      *ngIf="
+                        QuotationForm.hasError('minlength', 'QuotationName')
+                      "
+                    >
+                      Quotation Name must be at least 2 characters long
+                    </div>
+                    <div
+                      *ngIf="QuotationForm.hasError('pattern', 'QuotationName')"
+                    >
+                      Quotation Name contains i nvalid characters
+                    </div>
+                    <div>
+                      <div
+                        *ngIf="
+                          QuotationForm.get('QuotationName')?.hasError(
+                            'duplicateName'
+                          )
+                        "
+                      >
+                        {{ QuotationForm.get('QuotationName')?.errors?.['message'] }}
+                      </div>
+                    </div>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Supplier Type </mat-label>
+                  <mat-select formControlName="SupplierType">
+                    <ng-container *ngFor="let data of list">
+                      <ng-container *ngIf="data.list_Name === 'Supplier_Type'">
+                        <mat-option
+                          *ngFor="let item of data.list_Options"
+                          [value]="item.value"
+                        >
+                          {{ item.value }}
+                        </mat-option>
+                      </ng-container>
+                    </ng-container>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-8">
+                <mat-form-field
+                  appearance="outline"
+                  class="example-full-width w-100"
+                >
+                  <mat-label> Quotation Description</mat-label>
+                  <textarea
+                    matInput
+                    class="custom-textarea"
+                    formControlName="QuotationDescription"
+                    rows="3"
+                  ></textarea>
+                  <mat-error
+                    *ngIf="
+                      QuotationForm.controls['QuotationDescription'].touched &&
+                      QuotationForm.controls['QuotationDescription'].invalid
+                    "
+                  >
+                    <div
+                      *ngIf="
+                        QuotationForm.hasError(
+                          'required',
+                          'QuotationDescription'
+                        )
+                      "
+                    >
+                      Quotation Description is required
+                    </div>
+                    <div
+                      *ngIf="
+                        QuotationForm.hasError(
+                          'minlength',
+                          'QuotationDescription'
+                        )
+                      "
+                    >
+                      Quotation Description must be at least 2 characters long
+                    </div>
+                    <div
+                      *ngIf="
+                        QuotationForm.hasError(
+                          'pattern',
+                          'QuotationDescription'
+                        )
+                      "
+                    >
+                      Quotation Description contains invalid characters
+                    </div>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-4">
+                <div class="row">
+                  <div>
+                    <mat-form-field appearance="outline" class="w-100">
+                      <mat-label> Supplier Name </mat-label>
+
+                      <mat-select formControlName="SupplierName">
+                       
+                        <ng-container *ngFor="let data of list">
+                          <ng-container *ngIf="data.list_Name === 'Vendor'">
+                            <mat-option
+                              *ngFor="let item of data.list_Options"
+                              [value]="item.value"
+                            >
+                              {{ item.value }}
+                            </mat-option>
+                          </ng-container>
+                        </ng-container>
+                      </mat-select>
+                    </mat-form-field>
+                  
+                  </div>
+                  <div>
+                    <mat-form-field appearance="outline" class="w-100">
+                      <mat-label> Supplier Pricing</mat-label>
+                      <mat-select formControlName="SupplierPricingType">
+                        <ng-container *ngFor="let data of list">
+                          <ng-container
+                            *ngIf="data.list_Name === 'Supplier_Pricing_Type'"
+                          >
+                            <mat-option
+                              *ngFor="let item of data.list_Options"
+                              [value]="item.value"
+                            >
+                              {{ item.value }}
+                            </mat-option>
+                          </ng-container>
+                        </ng-container>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Log Flag </mat-label>
+                  <mat-select formControlName="LobFlag">
+                    <ng-container *ngFor="let data of list">
+                      <ng-container *ngIf="data.list_Name === 'LOB_Flag'">
+                        <mat-option
+                          *ngFor="let item of data.list_Options"
+                          [value]="item.value"
+                        >
+                          {{ item.value }}
+                        </mat-option>
+                      </ng-container>
+                    </ng-container>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Currency of Quotation </mat-label>
+                  <mat-select formControlName="CurrencyQuotation">
+                    <ng-container *ngFor="let data of list">
+                      <ng-container *ngIf="data.list_Name === 'CurrencyCode'">
+                        <mat-option
+                          *ngFor="let item of data.list_Options"
+                          [value]="item.value"
+                        >
+                          {{ item.value }}
+                        </mat-option>
+                      </ng-container>
+                    </ng-container>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Country </mat-label>
+                  <mat-select formControlName="Country">
+                    <ng-container *ngFor="let data of list">
+                      <ng-container
+                        *ngIf="data.list_Name === 'Country Location'"
+                      >
+                        <mat-option
+                          *ngFor="let item of data.list_Options"
+                          [value]="item.value"
+                        >
+                          {{ item.value }}
+                        </mat-option>
+                      </ng-container>
+                    </ng-container>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <mat-form-field
+                appearance="outline"
+                class="w-100 inputfield w-100"
+              >
+                <mat-label>Link to Quotation</mat-label>
+                <input
+                  matInput
+                  name="QuotationLink"
+                  formControlName="QuotationLink"
+                />
+                <mat-error
+                  class="error-message"
+                  *ngIf="
+                    QuotationForm.controls['QuotationLink'].touched &&
+                    QuotationForm.controls['QuotationLink'].invalid
+                  "
+                >
+                  <div
+                    *ngIf="QuotationForm.hasError('required', 'QuotationLink')"
+                  >
+                    Quotation Link is required
+                  </div>
+                  <div
+                    *ngIf="QuotationForm.hasError('pattern', 'QuotationLink')"
+                  >
+                    Link to Quotation must be valid
+                  </div>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <h2>Shipping</h2>
+            <div class="row">
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100 inputfield">
+                  <mat-label>Freight and Duty %</mat-label>
+                  <input
+                    matInput
+                    name="FreightDuty"
+                    formControlName="FreightDuty"
+                  />
+                  <mat-error
+                    *ngIf="
+                      QuotationForm.controls['FreightDuty'].touched &&
+                      QuotationForm.controls['FreightDuty'].hasError('max')
+                    "
+                    class="error-message"
+                  >
+                    % cannot be more than 100
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>INCO Terms of Supplier Bid</mat-label>
+                  <mat-select formControlName="INCOTerm">
+                    <ng-container *ngFor="let data of list">
+                      <ng-container
+                        *ngIf="data.list_Name === 'Vendor_Bid_Term'"
+                      >
+                        <mat-option
+                          *ngFor="let item of data.list_Options"
+                          [value]="item.value"
+                        >
+                          {{ item.value }}
+                        </mat-option>
+                      </ng-container>
+                    </ng-container>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100 inputfield">
+                  <mat-label>INCO Location</mat-label>
+                  <input
+                    matInput
+                    name="INCOLocation"
+                    formControlName="INCOLocation"
+                  />
+                </mat-form-field>
+              </div>
+              <h2>Terms And Conditions</h2>
+              <div class="row">
+                <div class="col-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Date of Latest Price SE</mat-label>
+                    <input
+                      matInput
+                      [matDatepicker]="picker1"
+                      formControlName="PriceDate"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="picker1"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Price Valid Until </mat-label>
+                    <input
+                      matInput
+                      [matDatepicker]="picker2"
+                      formControlName="PriceValidDate"
+                    />
+                    <mat-error>
+                      <div
+                        *ngIf="
+                          QuotationForm.get('PriceValidDate')?.hasError(
+                            'dateComparison'
+                          )
+                        "
+                      >
+                      {{ QuotationForm.get('PriceValidDate')?.errors?.['message'] }}
+                    
+                      </div>
+                    </mat-error>
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="picker2"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-4">
+                  <mat-form-field appearance="outline" class="w-100 inputfield">
+                    <mat-label>Annual Escalation %</mat-label>
+                    <input
+                      matInput
+                      name="AnnualEscalation"
+                      formControlName="AnnualEscalation"
+                    />
+                  </mat-form-field>
+                  <mat-error
+                    class="error-message"
+                    *ngIf="QuotationForm.hasError('max', 'AnnualEscalation')"
+                  >
+                    %Cannot be more than 100
+                  </mat-error>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-4">
+                  <mat-form-field appearance="outline" class="w-100 inputfield">
+                    <mat-label>Forex Exposure</mat-label>
+                    <input
+                      matInput
+                      name="ForexExposure"
+                      formControlName="ForexExposure"
+                    />
+                    <mat-error
+                      class="error-message"
+                      *ngIf="QuotationForm.hasError('max', 'ForexExposure')"
+                    >
+                      Value cannot be more than 12 integers
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-error
+                    *ngIf="
+                      QuotationForm.controls['ForexExposure'].touched &&
+                      QuotationForm.controls['ForexExposure'].invalid &&
+                      QuotationForm.controls['ForexExposure'].hasError(
+                        'maxlength'
+                      )
+                    "
+                    class="error-message"
+                  >
+                    Value cannot be more than 12 digits
+                  </mat-error>
+                </div>
+
+                <div class="col-4">
+                  <mat-form-field appearance="outline" class="w-100 inputfield">
+                    <mat-label>Annual Warranty Cost % </mat-label>
+                    <input matInput formControlName="WarrantyCost" />
+                  </mat-form-field>
+                </div>
+                <div class="col-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Warranty Argument Months</mat-label>
+                    <input
+                      matInput
+                      name="Warrenty"
+                      formControlName="Warrenty"
+                    />
+
+                    <mat-error
+                      class="error-message"
+                      *ngIf="QuotationForm.hasError('maxlength', 'Warrenty')"
+                    >
+                      Months must be at max of 5 digits
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-8">
+                  <mat-form-field appearance="outline" class="w-100 inputfield">
+                    <mat-label>Other Non-B2B T&Cs</mat-label>
+                    <input
+                      matInput
+                      name="Other Non-B2B T&Cs"
+                      formControlName="OtherTerms"
+                    />
+                  </mat-form-field>
+                </div>
+
+                <div class="col-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Payment Terms</mat-label>
+                    <mat-select formControlName="PaymentTerms">
+                      <ng-container *ngFor="let data of list">
+                        <ng-container *ngIf="data.list_Name === 'PayTerms'">
+                          <mat-option
+                            *ngFor="let item of data.list_Options"
+                            [value]="item.value"
+                          >
+                            {{ item.value }}
+                          </mat-option>
+                        </ng-container>
+                      </ng-container>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer  m-0 pt-0 pb-0 footer">
+          <button
+            type="submit"
+            (click)="onSubmit($event)"
+            class=" save"
+          >
+            {{ Id == 0 || Id == undefined? "Save": "Apply changes" }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

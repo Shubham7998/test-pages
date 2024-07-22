@@ -1,0 +1,72 @@
+{
+    "code":200,
+    "root":[
+    {
+    "quotation_Details":[
+    {
+    "DataContainerId":1,
+    "QuotationName":"Quotation 1",
+    "SupplierName":"vendor 1",
+    "Interco":true,
+    "QuotationDescription":"Quotation Des.cription 1",
+    "QuotationLink":"Quotation Link",
+    "SupplierPricingType":"",
+    "CurrencyQuotation":"",
+    "FreightDuty":0.0,
+    "Country":"",
+    "PriceDate":"2023-01-19T11:52:39.827",
+    "PriceValidDate":"2023-01-19T11:52:39.827",
+    "AnnualEscalation":0.0,
+    "INCOTerm":"",
+    "INCOLocation":"",
+    "Warranty":1,
+    "WarrantyCost":0.0,
+    "PaymentTerms":"",
+    "ForexExposure":"",
+    "OtherTerms":"",
+    "status":"Draft",
+    "groupStatus":"Draft",
+    "SummaryCount":0,
+    "TotalCost":0.0,
+    "TotalExpectationCost":0.0,
+    "isActive":false,
+    "LobFlag":"PA",
+    "SupplierType":""
+    },
+    {
+    "DataContainerId":11,
+    "QuotationName":"Quotation 11",
+    "SupplierName":"vendor 1",
+    "Interco":true,
+    "QuotationDescription":"Quotation Description 1",
+    "QuotationLink":"Quotation Link",
+    "SupplierPricingType":"",
+    "CurrencyQuotation":"",
+    "FreightDuty":0.0,
+    "Country":"",
+    "PriceDate":"2023-01-19T11:52:39.827",
+    "PriceValidDate":"2023-01-19T11:52:39.827",
+    "AnnualEscalation":0.0,
+    "INCOTerm":"",
+    "INCOLocation":"",
+    "Warranty":1,
+    "WarrantyCost":0.0,
+    "PaymentTerms":"",
+    "ForexExposure":"",
+    "OtherTerms":"",
+    "status":"Publish",
+    "groupStatus":"Publish",
+    "SummaryCount":0,
+    "TotalCost":0.0,
+    "TotalExpectationCost":0.0,
+    "isActive":false,
+    "LobFlag":"PA",
+    "SupplierType":""
+    }
+    ]
+    }
+    ],
+    "message":"string"
+    
+}
+    

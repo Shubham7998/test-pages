@@ -1,0 +1,646 @@
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
+
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+
+import { ChangeDetectionStrategy } from '@angular/core';
+import { observable } from 'rxjs';
+// import Lists from '../../assets/list.json'
+import Countries from '../../country.json';
+import { HttpClient } from '@angular/common/http';
+import { ResaleService } from '../services/resale-service.service';
+import { List } from '../list';
+import { ActivatedRoute } from '@angular/router';
+import { CustomvalidationService } from '../services/customvalidation.service';
+
+@Component({
+  selector: 'app-quotation-form',
+  templateUrl: './quotation-form.component.html',
+  styleUrls: ['./quotation-form.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class QuotationFormComponent implements OnInit, OnChanges {
+  @Input() editData: any = [];
+
+  formData: any = [];
+  newData: any;
+
+  list: List[] = [];
+  country: List[] = [];
+  dataContainerId = 1;
+  Id?: number;
+  matchedData: any;
+  QuotationFormData: any;
+  groupStatus?:string;
+
+  ListHeader = [
+    'Supplier_Pricing_Type',
+    'Vendor_Bid_Term',
+    'Vendor',
+    'CurrencyCode',
+    'PayTerms',
+    'ResaleCategory',
+    'LOB_Flag',
+    'Supplier_Type',
+    'Country Location',
+  ];
+
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private resaleService: ResaleService,
+    private route: ActivatedRoute,
+    private validation: CustomvalidationService
+  ) {}
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['editData']) {
+      this.formData = JSON.parse(localStorage.getItem('New Quotation') || '[]');
+      console.log('data', changes['editData']);
+      this.setFormData(changes['editData'].currentValue);
+    }
+  }
+
+  ngOnInit(): void {
+    this.loadData(this.ListHeader);
+    this.route.params.subscribe((params: any) => {
+      this.Id = params['id'];
+      console.log('ID', this.Id);
+    });
+    this.route.queryParams.subscribe((queryParams: any) => {
+      this.groupStatus = queryParams['status'];
+      console.log("status quotation",this.groupStatus);
+    });
+
+    this.observeData();
+  }
+
+  observeData() {
+    // this.editData = val;
+    // this.resaleService.data.subscribe((val: any) => {
+    console.log('editData', this.editData);
+    this.setFormData(this.editData);
+    // });
+  }
+
+  setFormData(data: any) {
+    //  this.QuotationFormData.dataContainerId =this.Id;
+    // console.log("data",this.QuotationFormData.dataContainerId);
+    this.QuotationForm.patchValue({
+      QuotationName: data?.QuotationName || '',
+      SupplierType: data?.SupplierType || '',
+      QuotationDescription: data?.QuotationDescription || '',
+      SupplierName: data?.SupplierName || '',
+      SupplierPricing: data?.SupplierPricingType || '',
+      LobFlag: data?.LobFlag || '',
+      CurrencyQuotation: data?.CurrencyQuotation || '',
+      Country: data?.Country || '',
+      QuotationLink: data?.QuotationLink || '',
+      FreightDuty: data?.FreightDuty || '',
+      IncoSupplierTerm: data?.INCOTerm || '',
+      IncoLocation: data?.INCOLocation || '',
+      LatestPriceSetDate: data?.PriceDate || '',
+      PriceValidUntilDate: data?.PriceValidDate || '',
+      AnnualEscalationandDuty: data?.AnnualEscalation || '',
+      ForexExposure: data?.ForexExposure || '',
+      AnnualWarrantyCost: data?.WarrantyCost || '',
+      WarrentyArgumentMonths: data?.Warranty || '',
+      PayTerms: data?.PaymentTerms || '',
+      OtherTerms: data?.OtherTerms || '',
+    });
+
+    // console.log('quotaionForm', values);
+  }
+
+  getLocalData(data: any) {
+    this.formData = JSON.parse(localStorage.getItem('New Quotation') || '[]');
+    this.formData?.push(data[0]);
+    localStorage.setItem('New Quotation', JSON.stringify(this.formData));
+  }
+
+  loadData(input: string[]): void {
+    this.http.get('assets/list.json').subscribe((res: any) => {
+      this.list = res.root.filter((item: any) =>
+        input.includes(item.list_Name)
+      );
+     // console.log(this.list);
+    });
+  }
+
+  QuotationForm = new FormGroup({
+    QuotationName: new FormControl(
+      '',
+      [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.pattern(/^[a-zA-Z0-9 ]*$/),
+      ],
+      [this.validateQuotationName.bind(this)]
+    ),
+    SupplierType: new FormControl('', Validators.required),
+    QuotationDescription: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2),
+
+      Validators.pattern(/^[a-zA-Z0-9 ]*$/),
+    ]),
+    SupplierName: new FormControl('', Validators.required),
+    SupplierPricing: new FormControl(''),
+    LobFlag: new FormControl('', Validators.required),
+    CurrencyQuotation: new FormControl('', Validators.required),
+    Country: new FormControl(''),
+    //countryLocation: new FormControl(''),
+    QuotationLink: new FormControl(
+      ''
+      // Validators.pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/)
+    ),
+    FreightDuty: new FormControl('', [Validators.max(100)]),
+    IncoSupplierTerm: new FormControl(''),
+    IncoLocation: new FormControl(''),
+    LatestPriceSetDate: new FormControl(''),
+    PriceValidUntilDate: new FormControl(''),
+    AnnualEscalationandDuty: new FormControl('', [Validators.max(100)]),
+    ForexExposure: new FormControl('', [Validators.maxLength(12)]),
+    AnnualWarrantyCost: new FormControl(''),
+    WarrentyArgumentMonths: new FormControl('', [Validators.maxLength(5)]),
+    PayTerms: new FormControl(''),
+    OtherTerms: new FormControl(''),
+  });
+
+  validateQuotationName(
+    control: AbstractControl
+  ): Promise<{ [key: string]: any } | null> {
+    return new Promise((resolve) => {
+      const formData = JSON.parse(
+        localStorage.getItem('New Quotation') || '[]'
+      );
+      //console.log('formData', formData);
+      const duplicateName = formData.findIndex((item: any) => {
+        return item.quotation_Details[0]?.QuotationName == control.value;
+      });
+      // console.log('duplicateName', duplicateName);
+      // console.log('control.value', control.value);
+
+      if (duplicateName != -1) {
+        //console.log('duplicateName: true');
+        resolve({
+          duplicateName: true,
+          message: 'Quotation name already exists',
+        });
+      } else {
+       // console.log('duplicateName: false');
+        resolve(null);
+
+        //resolve({duplicateName: false,message:"ghjhjjh"})
+      }
+    });
+  }
+
+  QuotataionFormData() {
+    console.log(this.QuotationForm.value);
+  }
+
+  onSubmit(event: any): void {
+    console.log('Quotation Form', this.QuotationForm);
+    const changeDetect = true;
+    if (this.QuotationForm.invalid) {
+      this.QuotationForm.markAllAsTouched();
+      return;
+    }
+    
+    if (this.QuotationForm.valid) {
+      console.log('id', this.Id);
+      const quotationFormData = this.QuotationForm.value;
+
+      if (this.Id !== 0 ) {
+       // console.log('quotaionForm', this.QuotationForm.value);
+      //  this.resaleService.addNewData(changeDetect);
+
+     this.editData = this.mapData();
+       console.log("editData",this.editData);
+        this.resaleService.detailsData([this.editData]);
+        console.log('updated edit', this.editData);
+        this.QuotationForm.reset()
+       // this.updateLocalData(this.QuotationForm.value);
+        this.resaleService.addNewData(changeDetect);
+        
+      }
+
+      if (this.Id == undefined) {
+        let dataContainerId = localStorage.getItem('dataContainerId');
+        if (dataContainerId === null) {
+          dataContainerId = '1';
+        }
+        let dataContainerIdNumber = Number(dataContainerId);
+        dataContainerIdNumber++;
+        localStorage.setItem(
+          'dataContainerId',
+          dataContainerIdNumber.toString()
+        );
+        const QuotationFormData = [
+          {
+            DataContainerId: dataContainerIdNumber,
+            OperationType: 'Draft',
+            ActionType: 'Add',
+            IsChangeQuotaionSummary: false,
+            IsChangeQuotationDetail: true,
+            quotation_Details: [quotationFormData],
+            Quotation_Summary: [],
+          },
+        ];
+
+        this.getLocalData(QuotationFormData);
+
+        this.resaleService.addNewData(changeDetect);
+        console.log('JSON Data   :', QuotationFormData);
+      }
+
+    }
+    this.closeScreen();
+  }
+
+  mapData() {
+
+    const values = this.QuotationForm.getRawValue();
+    console.log('Values are : ', values);
+
+    const editQuotationDetails = {
+      DataContainerId: this.Id,
+      QuotationName: values?.QuotationName || '',
+      SupplierName: values?.SupplierName,
+      QuotationDescription: values?.QuotationDescription,
+      QuotationLink: values?.QuotationLink,
+      SupplierType: values?.SupplierType,
+      SupplierPricingType: values?.SupplierPricing,
+      LobFlag: values?.LobFlag,
+      CurrencyQuotation: values?.CurrencyQuotation,
+      FreightDuty: values?.FreightDuty || '',
+      Country: values?.Country || '',
+      PriceDate: values?.LatestPriceSetDate || '',
+
+      PriceValidDate: values?.PriceValidUntilDate || '',
+      AnnualEscalation: values?.AnnualEscalationandDuty || 0,
+      INCOTerm: values?.IncoSupplierTerm,
+      INCOLocation: values?.IncoLocation || '',
+      Warranty: values?.WarrentyArgumentMonths || '',
+      WarrantyCost: values?.AnnualWarrantyCost || 0,
+      PaymentTerms: values?.PayTerms || '',
+      ForexExposure: values?.ForexExposure || '',
+      OtherTerms: values?.OtherTerms || '',
+      groupStatus: 'Draft',
+      SummaryCount: 0,
+      TotalCost: 0,
+      TotalExpectationCost: 0,
+      isActive: false,
+    };
+    return editQuotationDetails;
+  }
+
+  updateLocalData(updatedData: any) {
+    let storedData = localStorage.getItem('New Quotation');
+    console.log('storedData', storedData);
+
+    if (storedData) {
+      let dataArray = JSON.parse(storedData);
+      console.log('dataarr', dataArray);
+      const index = dataArray.findIndex(
+        (item: any) => item.DataContainerId == this.Id  && item.OperationType === this.groupStatus
+      );
+      console.log("index",index);
+
+      if (index !== -1) {
+        storedData.slice(index, 1);
+        console.log('storedData');
+
+        dataArray[index].quotation_Details = [updatedData];
+
+        console.log('updatedData', updatedData);
+        localStorage.clear();
+
+        localStorage.setItem('New Quotation', JSON.stringify(dataArray));
+
+        console.log('Updated JSON Data   :', dataArray);
+      } else {
+        console.log('dataContainerId not found.');
+      }
+    } else {
+      console.log('No data  in localStorage.');
+    }
+  }
+
+  closeScreen(): void {
+    if (this.Id !== 0) {
+      this.setFormData(this.editData);
+    }
+    if (this.Id === undefined || this.Id === 0) this.QuotationForm.reset();
+    console.log('Form has been reset');
+    
+  }
+
+  loadExistingQuotationNames(): string[] {
+    const storedData = JSON.parse(
+      localStorage.getItem('New Quotation') || '[]'
+    );
+    return storedData.map((item: any) => item.quotation_Details.QuotationName);
+  }
+
+  get QuotationFormControl() {
+    return this.QuotationForm.controls;
+  }
+
+  get QuotationName() {
+    return this.QuotationForm.get('QuotationName');
+  }
+}
+
+
+
+
+import {
+    Component,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChanges,
+  } from '@angular/core';
+  import { ResaleService } from '../services/resale-service.service';
+  import { ActivatedRoute, Router } from '@angular/router';
+  import { Subscription } from 'rxjs';
+  
+  @Component({
+    selector: 'app-details',
+    templateUrl: './details.component.html',
+    styleUrls: ['./details.component.scss'],
+  })
+  export class DetailsComponent implements OnInit, OnChanges {
+    @Input() id: number = 0;
+    groupStatus?: string;
+    storeData: any[] = [];
+    DetailsData: any[] = [];
+    matchedData: any;
+    changeDetect?: boolean = false;
+    editData: any;
+  
+    private subscription = Subscription.EMPTY;
+    constructor(
+      private resaleService: ResaleService,
+      private route: ActivatedRoute
+    ) {}
+  
+    ngOnChanges(changes: SimpleChanges): void {
+      if (changes['id']) {
+        this.mapIdToDetailsData();
+      }
+    }
+  
+    ngOnInit(): void {
+      this.observeData();
+    }
+  
+    observeData() {
+      this.route.params.subscribe((params: any) => {
+        this.id = params['id'];
+      });
+      this.route.queryParams.subscribe((queryParams: any) => {
+        this.groupStatus = queryParams['status'];
+      });
+  
+      this.subscription = this.resaleService.data.subscribe((res: any) => {
+        this.editData = res;
+       
+        console.log('editdata', this.editData);
+        
+        this.mapIdToDetailsData();
+      });
+  
+      this.mapIdToDetailsData();
+  
+      this.resaleService.addData.subscribe((res: any) => {
+        const changedata = res;
+        console.log('changedata', changedata);
+        if (changedata) {
+          this.mapIdToDetailsData();
+        }
+      });
+  
+      console.log('id', this.id);
+      console.log('status', this.groupStatus);
+    }
+  
+    status(type: string) {
+      let storedData = localStorage.getItem('New Quotation');
+      let dataArray = storedData ? JSON.parse(storedData) : [];
+      let Action = this.changeDetect ? 'Add' : 'Edit';
+  
+      const QuotationFormData = {
+        DataContainerId: this.id,
+        OperationType: type,
+        ActionType: Action,
+        IsChangeQuotaionSummary: false,
+        IsChangeQuotationDetail: this.changeDetect,
+        quotation_Details: [this.matchedData],
+        Quotation_Summary: [],
+      };
+  
+      console.log('matchData', this.matchedData);
+  
+      const existingIndex = dataArray.findIndex(
+        (item: any) =>
+          item.DataContainerId === this.id 
+        // &&
+        //   item.OperationType == this.groupStatus
+      );
+  
+      console.log('existingIndex', existingIndex);
+  
+      console.log('previous code', dataArray[existingIndex]);
+      console.log('new Data', QuotationFormData);
+      let UpdateId = this.isEql(dataArray[existingIndex], QuotationFormData);
+      console.log('updatedId', UpdateId);
+  
+      if (existingIndex !== -1) {
+        const existingItem = dataArray[existingIndex];
+        //const existingItem = QuotationFormData;
+  
+        if (existingItem.OperationType === 'Draft' && type === 'Draft') {
+          if (!this.changeDetect) {
+            // if (UpdateId) {
+            //   this.updateLocalData(QuotationFormData.quotation_Details[0]);
+            // } else {
+              console.log('Draft to Draft without change detection.');
+            //}
+            return;
+          }
+        }
+  
+        if (existingItem.OperationType === 'Draft' && type === 'Publish') {
+          console.log('Draft to Publish.');
+          dataArray[existingIndex] = QuotationFormData;
+        }
+  
+        if (existingItem.OperationType === 'Publish' && type === 'Publish') {
+          if (!this.changeDetect) {
+            // if (UpdateId) {
+            //   this.updateLocalData(QuotationFormData.quotation_Details[0]);
+            // } else {
+              console.log('Publish to Publish without change detection.');
+            //}
+            return;
+          }
+        }
+  
+      } else {
+        dataArray.push(QuotationFormData);
+      }
+  
+      localStorage.setItem('New Quotation', JSON.stringify(dataArray));
+  
+      console.log('QuotationForm status', QuotationFormData);
+    }
+  
+    updateLocalData(updatedData: any) {
+      let storedData = localStorage.getItem('New Quotation');
+      console.log('storedData', storedData);
+  
+      if (storedData) {
+        let dataArray = JSON.parse(storedData);
+        console.log('dataarr', dataArray);
+        const index = dataArray.findIndex(
+          (item: any) =>
+            item.DataContainerId == this.id &&
+            item.OperationType === this.groupStatus
+        );
+        console.log('index', index);
+  
+        if (index !== -1) {
+          storedData.slice(index, 1);
+          console.log('storedData');
+  
+          dataArray[index].quotation_Details = [updatedData];
+  
+          console.log('updatedData', updatedData);
+          localStorage.clear();
+  
+          localStorage.setItem('New Quotation', JSON.stringify(dataArray));
+  
+          console.log('Updated JSON Data   :', dataArray);
+        } else {
+          console.log('dataContainerId not found.');
+        }
+      } else {
+        console.log('No data  in localStorage.');
+      }
+    }
+  
+    mapIdToDetailsData(): void {
+      if (this.editData?.length !== 0) {
+        this.matchedData = this.editData[0];
+        console.log("matchedData",this.matchedData);
+        // this.editData[0] = null;
+      } 
+      else {
+        console.log('else');
+        let storedData = localStorage.getItem('New Quotation');
+        let dataArray = storedData ? JSON.parse(storedData) : [];
+        console.log('dataArray', dataArray);
+  
+        const existingIndex = dataArray.findIndex(
+          (item: any) =>
+            item.DataContainerId == this.id &&
+            item.OperationType === this.groupStatus
+        );
+  
+        if (existingIndex !== -1) {
+          const existingItem = dataArray[existingIndex];
+  
+          console.log('groupStatus', this.groupStatus);
+  
+          if (
+            existingItem.quotation_Details &&
+            existingItem.quotation_Details.length > 0
+          ) {
+            this.matchedData = existingItem.quotation_Details[0];
+          } else {
+            this.matchedData = null;
+          }
+        } else {
+          this.matchedData = null;
+        }
+  
+        console.log('matchedData', this.matchedData);
+      }
+      // if (this.id > 0 && this.DetailsData?.length > 0) {
+  
+      //   this.matchedData = this.DetailsData.find(
+      //     (item) =>
+      //       item.DataContainerId == this.id &&
+      //       item.groupStatus == this.groupStatus
+      //   );
+  
+      //   if (this.matchedData) {
+      //     this.matchedData = this.matchedData?.quotation_Details[0];
+      //   } else {
+      //     this.matchedData = null;
+      //   }
+      //   console.log('matchedData', this.matchedData);
+      // }
+    }
+  
+    mapData(editData: any) {
+      const quotationFormData = {
+        QuotationName: editData?.QuotationName ,
+        SupplierName: editData?.SupplierName,
+        QuotationDescription: editData?.QuotationDescription,
+        QuotationLink: editData?.QuotationLink,
+        SupplierType: editData?.SupplierType,
+        SupplierPricingType: editData?.SupplierPricing,
+        LobFlag: editData?.LobFlag,
+        CurrencyQuotation: editData?.CurrencyQuotation,
+        FreightDuty: editData?.FreightDuty || '',
+        Country: editData?.Country || '',
+        PriceDate: editData?.LatestPriceSetDate || '',
+        PriceValidDate: editData?.PriceValidUntilDate || '',
+        AnnualEscalation: editData?.AnnualEscalationandDuty || 0,
+        INCOTerm: editData?.IncoSupplierTerm,
+        INCOLocation: editData?.IncoLocation || '',
+        Warranty: editData?.WarrentyArgumentMonths || '',
+        WarrantyCost: editData?.AnnualWarrantyCost || 0,
+        PaymentTerms: editData?.PayTerms || '',
+        ForexExposure: editData?.ForexExposure || '',
+        OtherTerms: editData?.OtherTerms || '',
+        SummaryCount: 0,
+        TotalCost: 0,
+        TotalExpectationCost: 0,
+        isActive: false,
+      };
+      return quotationFormData ;
+  
+    }
+  
+  
+    ngOnDestroy() {
+      //alert('called');
+      this.editData = [];
+      this.subscription.unsubscribe();
+      this.resaleService.detailsData([]);
+    }
+  
+    isEql(dataA: any, dataB: any) {
+      return JSON.stringify(dataA) === JSON.stringify(dataB);
+    }
+  
+  }
+  

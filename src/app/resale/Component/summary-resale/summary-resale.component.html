@@ -1,0 +1,288 @@
+<div>
+    <div class="resale-quotation">
+      <div class="left-side">
+        <label class="resale-title" [routerLink]="['/resale/summary']">
+          Resale Quotation
+          <img
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+            src="assets/plus-icon.png"
+          />
+        </label>
+      </div>
+    </div>
+  
+    <div>
+      <app-quotation-form></app-quotation-form>
+    </div>
+  </div>
+  <!-- <app-quotation-form (userAdded)="loadData($event)"></app-quotation-form> -->
+  <div class="row" *ngIf="summary?.length == 0">
+    <!-- <app-summary-card></app-summary-card> -->
+    <app-summary-resale></app-summary-resale>
+  </div>
+  
+  <div  *ngIf="summary?.length !== 0">
+    <div class="cards">
+      <div *ngIf="draftCount != 0">
+        <div class="row">
+          <div class="col-11">
+            <h2 class="title">Draft</h2>
+          </div>
+          <div *ngIf="!publicEditFlag" class="col-1 d-flex justify-content-end">
+            <i
+              *ngIf="draftCount != 0"
+              style="
+                cursor: pointer;
+                color: grey;
+              
+              "
+              class="fas fa-pencil pencil  fs-6 pencil"
+              (click)="onClickDraftEditFlag()"
+            ></i>
+          </div>
+        </div>
+        <mat-card appearance="outlined" class="card">
+          <mat-card-content>
+            <!-- <div *ngIf="draftCount == 0" class="noRecord my-3">
+                No record Found
+              </div> -->
+            <div *ngIf="draftCount !== 0">
+              <div>
+                <div class="row header">
+                  <div class="col-5">
+                    <h4>Quotation Name</h4>
+                  </div>
+                  <div class="col-2">
+                    <h4>Item Count</h4>
+                  </div>
+                  <div class="col-2">
+                    <h4>Total Expected Cost</h4>
+                  </div>
+                  <div class="col-2">
+                    <h4>Total List Price</h4>
+                  </div>
+                  <div *ngIf="draftEditFlag && !publicEditFlag" class="col-1">
+                    Delete
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div>
+                  <div *ngFor="let item of summary">
+                    <div class="deleteData" *ngIf="tempDelete"></div>
+                    <div *ngIf="item.groupStatus === 'Draft'">
+                      <div class="row values">
+                        <div class="col-5">
+                          <a
+                            [routerLink]="[
+                              '/resale/summary/details',
+                              item.DataContainerId
+                            ]"
+                            [queryParams]="{ status: item.groupStatus }"
+                          >
+                            {{ item.QuotationName }}
+                        </a>
+                        </div>
+                        <div
+                          class="deleteData"
+                          *ngIf="deleteRowDataLine(item.DataContainerId, 'Draft')"
+                        ></div>
+                        <div class="col-2">
+                          <span>
+                            {{ item.CurrencyQuotation }}
+                            {{ item.SummaryCount }}</span
+                          >
+                        </div>
+                        <div class="col-2">
+                          <span>
+                            {{ item.CurrencyQuotation }}
+                            {{ item.TotalExpectationCost  }}</span
+                          >
+                        </div>
+                        <div class="col-2">
+                          <span> 
+                            {{ item.CurrencyQuotation }}
+                             {{ item.TotalCost }}</span>
+                        </div>
+                        <div class="col-1" *ngIf="draftEditFlag">
+                          <i
+                            class="fa fa-trash"
+                            aria-hidden="true"
+                            (click)="DeleteList(item.DataContainerId, 'Draft')"
+                          ></i>
+                          <div class="crossOnDelete" (click)="DeleteList(item.DataContainerId, 'Draft')"  *ngIf="deleteRowDataLine(item.DataContainerId, 'Draft')">
+                            <i class="fa-regular fa-circle-xmark fs-2" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                        <!-- <div class="col-1" *ngIf="draftEditFlag">
+                            <i class="fa" 
+                            [ngClass]="item.isTrashIcon ? 'fa-trash' : 'fa-times'"  aria-hidden="true" 
+                            (click)="toggleIcon(item); DeleteList(item.DataContainerId, 'Draft')">
+                          </i>
+                          </div> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="buttons" *ngIf="draftEditFlag">
+                  <div *ngIf="draftCount !== 0">
+                    <button
+                      (click)="onClickCancel()"
+                      class="btn btn-primary"
+                      style="background-color: rgb(241, 86, 86)"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                  <div>
+                    <button
+                      [disabled]="dlist.length == 0"
+                      class="btn btn-primary"
+                      [ngClass]="{
+                        'btn-success': isClicked,
+                        'btn-secondary': dlist.length == 0
+                      }"
+                      (click)="trashData('Draft')"
+                    >
+                      Apply Changes
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+  
+      <div *ngIf="publishCount != 0">
+        <div class="row">
+          <div class="col-11">
+            <h2 class="title">Published</h2>
+          </div>
+          <div *ngIf="!draftEditFlag" class="col-1 d-flex justify-content-end">
+            <i
+              *ngIf="publishCount != 0"
+              class="fas fa-pencil pencil fs-6"
+              (click)="onClickPublishEditFlag()"
+            ></i>
+          </div>
+          <!-- <div *ngIf="!publicEditFlag" class="col-1 d-flex justify-content-center align-items-center ">
+              <i *ngIf="draftCount != 0" style="cursor: pointer;  color: grey;"
+                class="fas fa-pencil pencil-icon my-2 fs-5 pencil" (click)="onClickDraftEditFlag()"></i>
+            </div> -->
+        </div>
+  
+        <mat-card appearance="outlined" class="card">
+          <mat-card-content>
+            <!-- <div *ngIf="publishCount == 0" class="noRecord my-3">
+                No record Found
+              </div> -->
+            <div *ngIf="publishCount !== 0">
+              <div>
+                <div class="row header">
+                  <div class="col-5">
+                    <h4>Quotation Name</h4>
+                  </div>
+                  <div class="col-2">
+                    <h4>Item Count</h4>
+                  </div>
+                  <div class="col-2">
+                    <h4>Total Expected Cost</h4>
+                  </div>
+                  <div class="col-2">
+                    <h4>Total List Price</h4>
+                  </div>
+                  <div *ngIf="!draftEditFlag && publicEditFlag" class="col-1">
+                    Delete
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div *ngFor="let item of summary">
+                  <div *ngIf="item.groupStatus === 'Publish'">
+                    <div class="row values">
+                      <div class="col-5">
+                        <a
+                          
+                          [routerLink]="[
+                            '/resale/summary/details',
+                            item.DataContainerId
+                          ]"
+                          [queryParams]="{ status: item.groupStatus }"
+                        >
+                          {{ item.QuotationName }}
+                      </a>
+                      </div>
+  
+                      <div
+                        *ngIf="deleteRowDataLine(item.DataContainerId, 'Publish')"
+                        class="deleteData"
+                      ></div>
+  
+                      <div class="col-2">
+                        <span>
+                          {{ item.CurrencyQuotation }}
+                          {{ item.SummaryCount }}</span
+                        >
+                      </div>
+                      <div class="col-2">
+                        <span
+                          >{{ item.CurrencyQuotation }}
+                          {{ item.TotalExpectationCost }}</span
+                        >
+                      </div>
+                      <div class="col-2">
+                        <span>
+                          {{ item.CurrencyQuotation }}
+                          {{ item.TotalCost }}</span
+                        >
+                      </div>
+                      <div class="col-1" *ngIf="publicEditFlag">
+                        <i
+                          class="fa fa-trash"
+                          aria-hidden="true"
+                          (click)="DeleteList(item.DataContainerId, 'Publish')"
+                        ></i>
+                        <div class="crossOnDelete" (click)="DeleteList(item.DataContainerId, 'Publish')"  *ngIf="deleteRowDataLine(item.DataContainerId, 'Publish')">
+                          <i class="fa-regular fa-circle-xmark fs-2" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                      
+                     
+                    </div>
+                  </div>
+                </div>
+                <div class="buttons" *ngIf="publicEditFlag">
+                  <div>
+                    <button
+                      (click)="onClickCancel()"
+                      class="btn btn-primary"
+                      style="background-color: rgb(241, 86, 86)"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                  <div>
+                    <button
+                      [disabled]="dlist.length == 0"
+                      class="btn btn-primary"
+                      [ngClass]="{
+                        'btn-success': isClicked,
+                        'btn-secondary': dlist.length == 0
+                      }"
+                      (click)="trashData('Publish')"
+                    >
+                      Apply Changes
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  

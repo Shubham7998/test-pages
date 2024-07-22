@@ -1,0 +1,1212 @@
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { observable, retryWhen } from 'rxjs';
+// import Lists from '../../assets/list.json'
+import Countries from '../../country.json';
+import { HttpClient } from '@angular/common/http';
+import { ResaleService } from '../services/resale-service.service';
+import { List } from '../list';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+  selector: 'app-quotation-form',
+  templateUrl: './quotation-form.component.html',
+  styleUrls: ['./quotation-form.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+// SimpleChanges
+export class QuotationFormComponent implements OnInit {
+  @Input() editData: any=[];
+  formData: any = [];
+  newData: any;
+  localStarageData: any = [];
+  list: List[] = [];
+  country: List[] = [];
+  dataContainerId = 1;
+  
+  ListHeader = [
+    'Supplier_Pricing_Type',
+    'Vendor_Bid_Term',
+    'Vendor',
+    'CurrencyCode',
+    'PayTerms',
+    'ResaleCategory',
+    'LOB_Flag',
+    'Supplier_Type',
+    'Country Location',
+  ];
+
+  Id?: number;
+  matchedData: any;
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private resaleService: ResaleService,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    this.loadData(this.ListHeader);
+    this.route.params.subscribe((params: any) => {
+      this.Id = params['id'];
+      console.log("ID",this.Id);
+    });
+  //  this.observeData();
+  }
+  // observeData() {
+  //   this.resaleService.data.subscribe((val: any) => {
+  //    // this.editData = val;
+  //     this.setFormData(val);
+  //   });
+  // }
+ 
+
+  // setFormData(data: any) {
+    
+  //   this.QuotationForm.patchValue({
+  //     quotationName: data.QuotationName || '',
+  //     supplierType: data.SupplierType || '',
+  //     quotationDescription: data.QuotationDescription || '',
+  //     supplierName: data.SupplierName || '',
+  //     supplierPricing: data.SupplierPricingType || '',
+  //     lobFlag: data.LobFlag || '',
+  //     CurrencyQuotation: data.CurrencyQuotation || '',
+  //     Country: data.Country || '',
+  //     quotationLink: data.QuotationLink || '',
+  //     freightDuty: data.FreightDuty || '',
+  //     incoSupplierTerm: data.INCOTerm || '',
+  //     incoLocation: data.INCOLocation || '',
+  //     latestPriceSetDate: data.PriceDate || '',
+  //     priceValidUntilDate: data.PriceValidDate || '',
+  //     annualEscalationandDuty: data.AnnualEscalation || '',
+  //     forexExposure: data.ForexExposure || '',
+  //     annualWarrantyCost: data.WarrantyCost || '',
+  //     WarrentyArgumentMonths: data.Warranty || '',
+  //     payTerms: data.PaymentTerms || '',
+  //     otherTerms: data.OtherTerms || '',
+  //   });
+  
+  //   console.log("quotaionForm",this.QuotationForm);
+  // }
+
+
+  // getLocalData(data: any) {
+  //   this.formData = JSON.parse(localStorage.getItem('New Quotation') || '[]');
+  //   this.formData.push(data[0]);
+  //   localStorage.setItem('New Quotation', JSON.stringify(this.formData));
+  // }
+
+  setlocalData() {}
+
+  loadData(input: string[]): void {
+    this.http.get('assets/list.json').subscribe((res: any) => {
+      this.list = res.root.filter((item: any) =>
+        input.includes(item.list_Name)
+      );
+      console.log(this.list);
+    });
+  }
+
+  QuotationForm = new FormGroup({
+    quotationName: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.pattern(/^[a-zA-Z0-9]*$/),
+    ]),
+    supplierType: new FormControl('', Validators.required),
+    quotationDescription: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.pattern(/^[a-zA-Z0-9]*$/),
+    ]),
+    supplierName: new FormControl('', Validators.required),
+    supplierPricing: new FormControl(''),
+    lobFlag: new FormControl('', Validators.required),
+    CurrencyQuotation: new FormControl('', Validators.required),
+    Country: new FormControl(''),
+    // countryLocation: new FormControl(''),
+    quotationLink: new FormControl(
+      ''
+      // Validators.pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/)
+    ),
+    freightDuty: new FormControl('', [Validators.max(100)]),
+    incoSupplierTerm: new FormControl(''),
+    incoLocation: new FormControl(''),
+    latestPriceSetDate: new FormControl(''),
+    priceValidUntilDate: new FormControl(''),
+    annualEscalationandDuty: new FormControl('', [Validators.max(100)]),
+    forexExposure: new FormControl('', [Validators.maxLength(12)]),
+    annualWarrantyCost: new FormControl(''),
+    WarrentyArgumentMonths: new FormControl('', [Validators.maxLength(5)]),
+    payTerms: new FormControl(''),
+    otherTerms: new FormControl(''),
+  });
+
+  QuotataionFormData() {
+    console.log(this.QuotationForm.value);
+  }
+
+  onSubmit(): void {
+    if (this.QuotationForm.valid) {
+      const quotationFormData = this.QuotationForm.value;
+
+      const QuotationFormData = [
+        {
+          dataContainerId: this.dataContainerId++,
+          OperationType: 'Draft',
+          ActionType: 'Add',
+          isChangeQuotaionSummary: false,
+          isChangeQuotationDetail: true,
+          quotation_Details: [quotationFormData],
+          quotation_Summary: [],
+        },
+      ];
+     // this.getLocalData(QuotationFormData);
+      console.log('JSON Data   :', QuotationFormData);
+
+      this.closeScreen();
+    }
+  }
+
+  closeScreen(): void {
+    this.QuotationForm.reset();
+    console.log('Form has been reset');
+  }
+
+  quotationFormData() {
+    throw new Error('Method not implemented.');
+  }
+}
+
+
+<div>
+  <div
+    class="modal fade"
+    id="exampleModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="exampleModalLabel">New Quotation</h2>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            (click)="closeScreen()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <h2>Details</h2>
+          <form [formGroup]="QuotationForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+              <div class="col-8 quotataion">
+                <mat-form-field appearance="outline" class="w-100 input-field">
+                  <mat-label>Quotation Name</mat-label>
+                  <input
+                    class="small-input"
+                    matInput
+                   name="quotationName"
+                    formControlName="quotationName"
+                  />
+                  <mat-error
+                  
+                    *ngIf="
+                      (QuotationForm.controls['quotationName'].touched &&
+                        QuotationForm.hasError('required', 'quotationName')) ||
+                      QuotationForm.hasError('pattern', 'quotationName') ||
+                      QuotationForm.hasError('minlength', 'quotationName')
+                    "
+                     class="error-message">
+                    Quotation Name must be at least 2 characters
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Supplier Type </mat-label>
+                  <mat-select formControlName="supplierType">
+                    <ng-container *ngFor="let data of list">
+                      <ng-container *ngIf="data.list_Name === 'Supplier_Type'">
+                        <mat-option
+                          *ngFor="let item of data.list_Options"
+                          [value]="item.value"
+                        >
+                          {{ item.value }}
+                        </mat-option>
+                      </ng-container>
+                    </ng-container>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-8">
+                <mat-form-field
+                  appearance="outline"
+                  class="example-full-width w-100"
+                >
+                  <mat-label> Quotation Description</mat-label>
+                  <textarea
+                    matInput
+                    class="custom-textarea"
+                    formControlName="quotationDescription"
+                    rows="3"
+                  ></textarea>
+                  <mat-error
+                    *ngIf="
+                      (QuotationForm.controls['quotationDescription'].touched &&
+                        QuotationForm.hasError(
+                          'required',
+                          'quotationDescription'
+                        )) ||
+                      QuotationForm.hasError(
+                        'pattern',
+                        'quotationDescription'
+                      ) ||
+                      QuotationForm.hasError('minlength', 'quotationDescription')
+                    "  class="error-message"
+                    >quotation Description Name must be at least 2 characters
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+              <div class="col-4">
+                <div class="row">
+                  <div>
+                    <mat-form-field appearance="outline" class="w-100">
+                      <mat-label> Supplier Name </mat-label>
+
+                      <mat-select formControlName="supplierName">
+                        <!-- <mat-form-field class="w-100">
+                          <input
+                            matInput
+                            placeholder="Start typing to filter"
+                            name="supplierNameFilter"
+                          />
+                        </mat-form-field> -->
+                        <ng-container *ngFor="let data of list">
+                          <ng-container *ngIf="data.list_Name === 'Vendor'">
+                            <mat-option
+                              *ngFor="let item of data.list_Options"
+                              [value]="item.value"
+                            >
+                              {{ item.value }}
+                            </mat-option>
+                          </ng-container>
+                        </ng-container>
+                      </mat-select>
+                    </mat-form-field>
+                    <!-- <mat-error
+                      *ngIf="
+                        QuotationForm.controls['supplierName'].touched &&
+                        QuotationForm.hasError('required', 'supplierName')
+                      "
+                      >
+                    </mat-error> -->
+                  </div>
+                  <div>
+                    <mat-form-field appearance="outline" class="w-100">
+                      <mat-label> Supplier Pricing</mat-label>
+                      <mat-select formControlName="supplierPricing">
+                        <ng-container *ngFor="let data of list">
+                          <ng-container
+                            *ngIf="data.list_Name === 'Supplier_Pricing_Type'"
+                          >
+                            <mat-option
+                              *ngFor="let item of data.list_Options"
+                              [value]="item.value"
+                            >
+                              {{ item.value }}
+                            </mat-option>
+                          </ng-container>
+                        </ng-container>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label  >Log Flag </mat-label>
+                  <mat-select formControlName="lobFlag">
+                    <ng-container *ngFor="let data of list">
+                      <ng-container *ngIf="data.list_Name === 'LOB_Flag'">
+                        <mat-option
+                          *ngFor="let item of data.list_Options"
+                          [value]="item.value"
+                        >
+                          {{ item.value }}
+                        </mat-option>
+                      </ng-container>
+                    </ng-container>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Currency of Quotation </mat-label>
+                  <mat-select formControlName="CurrencyQuotation">
+                    <ng-container *ngFor="let data of list">
+                      <ng-container *ngIf="data.list_Name === 'CurrencyCode'">
+                        <mat-option
+                          *ngFor="let item of data.list_Options"
+                          [value]="item.value"
+                        >
+                          {{ item.value }}
+                        </mat-option>
+                      </ng-container>
+                    </ng-container>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label >Country </mat-label>
+                  <mat-select formControlName="Country">
+                    <ng-container *ngFor="let data of list">
+                      <ng-container
+                        *ngIf="data.list_Name === 'Country Location'"
+                      >
+                        <mat-option
+                          *ngFor="let item of data.list_Options"
+                          [value]="item.value"
+                        >
+                          {{ item.value }}
+                        </mat-option>
+                      </ng-container>
+                    </ng-container>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <mat-form-field
+                appearance="outline"
+                class="w-100 inputfield w-100"
+              >
+                <mat-label>Link to quotation</mat-label>
+                <input
+                  matInput
+                  
+                  name="quotationLink"
+                  formControlName="quotationLink"
+                />
+                <mat-error
+                class="error-message"
+                *ngIf="
+                  (QuotationForm.controls['quotationLink'].touched &&
+                  QuotationForm.hasError('required', 'quotationLink')) ||
+                  QuotationForm.hasError('pattern', 'quotationLink')
+                  "
+              >
+              Link to Quotation must be valid
+            </mat-error>
+          </mat-form-field>
+            </div>
+            <h2>Shipping</h2>
+            <div class="row">
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100 inputfield">
+                  <mat-label>Freight and Duty %</mat-label>
+                  <input
+                    matInput
+                   
+                    name="freightDuty"
+                    formControlName="freightDuty"
+                  />
+                  <mat-error *ngIf="QuotationForm.hasError('max', 'freightDuty')"   class="error-message">
+                    % cannot be more than 100
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>INCO Terms of Supplier Bid</mat-label>
+                  <mat-select formControlName="incoSupplierTerm">
+                    <ng-container *ngFor="let data of list">
+                      <ng-container *ngIf="data.list_Name === 'Vendor_Bid_Term'">
+                        <mat-option
+                          *ngFor="let item of data.list_Options"
+                          [value]="item.value"
+                        >
+                          {{ item.value }}
+                        </mat-option>
+                      </ng-container>
+                    </ng-container>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100 inputfield">
+                  <mat-label>INCO Location</mat-label>
+                  <input
+                    matInput
+                    
+                    name="incoLocation"
+                    formControlName="incoLocation"
+                  />
+                </mat-form-field>
+              </div>
+              <h2>Terms And ConditionS</h2>
+              <div class="row">
+                <div class="col-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Date of Latest Price SE</mat-label>
+                    <input
+                      matInput
+                      [matDatepicker]="picker1"
+                      formControlName="latestPriceSetDate"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="picker1"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Price Valid Until </mat-label>
+                    <input
+                      matInput
+                      [matDatepicker]="picker2"
+                      formControlName="priceValidUntilDate"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="picker2"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-4">
+                  <mat-form-field appearance="outline" class="w-100 inputfield">
+                    <mat-label>Annual Escalation %</mat-label>
+                    <input
+                      matInput
+                      
+                      name="annualEscalationandDuty"
+                      formControlName="annualEscalationandDuty"
+                    />
+                  </mat-form-field>
+                  <mat-error  class="error-message" *ngIf="QuotationForm.hasError('max', 'annualEscalationandDuty')">
+                   Months must be at max of 5 digits
+                  </mat-error>
+                 
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-4">
+                  <mat-form-field appearance="outline" class="w-100 inputfield">
+                    <mat-label>Forex Exposure</mat-label>
+                    <input
+                      matInput
+                      name="forexExposure"
+                      formControlName="forexExposure"
+                    />
+                    <mat-error  class="error-message" *ngIf="QuotationForm.hasError('max', 'forexExposure')">
+                      Value cannot be more than 12 integers
+                    </mat-error> 
+                  </mat-form-field>
+                  <!-- <mat-error
+                  *ngIf="
+                    forexExposure && forexExposure.invalid && forexExposure.touched
+                  "
+                >
+                Value cannot be more than 12 integers
+                </mat-error> -->
+                </div>
+
+                <div class="col-4">
+                  <mat-form-field appearance="outline" class="w-100 inputfield">
+                    <mat-label>Annual Warranty Cost% </mat-label>
+                    <input
+                      matInput
+                      formControlName="annualWarrantyCost"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="col-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Warranty Argument Months</mat-label>
+                    <input
+                      matInput
+                      name="WarrentyArgumentMonths"
+                      formControlName="WarrentyArgumentMonths"
+                    />
+                    
+                    <mat-error   class="error-message" *ngIf="QuotationForm.hasError('maxlength', 'WarrentyArgumentMonths')">
+                      Months must be at max of 5 digits
+                    </mat-error>
+                  </mat-form-field>
+                 
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-8">
+                  <mat-form-field appearance="outline" class="w-100 inputfield">
+                    <mat-label>Other Non-B2B T&Cs</mat-label>
+                    <input
+                      matInput
+                      name="Other Non-B2B T&Cs"
+                      formControlName="otherTerms"
+                    />
+                  </mat-form-field>
+                </div>
+
+                <div class="col-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Pay Terms</mat-label>
+                    <mat-select formControlName="payTerms">
+                      <ng-container *ngFor="let data of list">
+                        <ng-container *ngIf="data.list_Name === 'PayTerms'">
+                          <mat-option
+                            *ngFor="let item of data.list_Options"
+                            [value]="item.value"
+                          >
+                            {{ item.value }}
+                          </mat-option>
+                        </ng-container>
+                      </ng-container>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="submit"
+            (click)="onSubmit()"
+            class="btn btn-primary save"
+            data-bs-dismiss="modal"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div>
+  <div
+    class="modal fade"
+    id="exampleModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">New Quotation</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <h2>Details</h2>
+          <form [formGroup]="QuotationForm" (ngSubmit)="onSubmit()">
+       
+          <div class="row">
+            <div class="row">
+              <div class="col-8">
+                <mat-form-field appearance="outline" class="w-100 inputfield">
+                  <mat-label>Quotation Name</mat-label>
+                  <input
+                    matInput
+                    placeholder="Quotation Name"
+                    name="quotationName"
+                    formControlName="quotationName"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Supplier type list</mat-label>
+                  <mat-select   >
+                    <ng-container *ngFor="let data of list">
+                      <ng-container>
+                        <mat-option
+                          *ngFor="let item of data.list_Options"
+                          [value]="item.id"
+                        >
+                          {{ item.value }}
+                        </mat-option>
+                      </ng-container>
+                    </ng-container>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-8">
+                <mat-form-field
+                  appearance="outline"
+                  class="example-full-width w-100"
+                >
+                  <mat-label> Quotation Description</mat-label>
+                  <textarea
+                    matInput
+                    placeholder="Ex. It makes me feel..."
+                    class="custom-textarea"
+                  ></textarea>
+                </mat-form-field>
+              </div>
+              <div class="col-4">
+                <div class="row">
+                  <div>
+                    <mat-form-field appearance="outline" class="w-100">
+                      <mat-label> Supplier Name </mat-label>
+                      <mat-select>
+                        <ng-container *ngFor="let data of list">
+                          <ng-container *ngIf="data.list_Name === 'Vendor'">
+                            <mat-option
+                              *ngFor="let item of data.list_Options"
+                              [value]="item.id"
+                            >
+                              {{ item.value }}
+                            </mat-option>
+                          </ng-container>
+                        </ng-container>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div>
+                    <mat-form-field appearance="outline" class="w-100">
+                      <mat-label> Supplier Pricing</mat-label>
+                      <mat-select>
+                        <ng-container *ngFor="let data of list">
+                          <ng-container
+                            *ngIf="data.list_Name === 'Supplier_Pricing_Type'"
+                          >
+                            <mat-option
+                              *ngFor="let item of data.list_Options"
+                              [value]="item.id"
+                            >
+                              {{ item.value }}
+                            </mat-option>
+                          </ng-container>
+                        </ng-container>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Log Flag </mat-label>
+                  <mat-select>
+                    <ng-container *ngFor="let data of list">
+                      <ng-container *ngIf="data.list_Name === 'LOB_Flag'">
+                        <mat-option
+                          *ngFor="let item of data.list_Options"
+                          [value]="item.id"
+                        >
+                          {{ item.value }}
+                        </mat-option>
+                      </ng-container>
+                    </ng-container>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Currency of Quotation list</mat-label>
+                  <mat-select>
+                    <ng-container *ngFor="let data of list">
+                      <ng-container *ngIf="data.list_Name === 'CurrencyCode'">
+                        <mat-option
+                          *ngFor="let item of data.list_Options"
+                          [value]="item.id"
+                        >
+                          {{ item.value }}
+                        </mat-option>
+                      </ng-container>
+                    </ng-container>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Country list</mat-label>
+                  <mat-select>
+                    <ng-container *ngFor="let data of list">
+                      <ng-container
+                        *ngIf="data.list_Name === 'Country Location'"
+                      >
+                        <mat-option
+                          *ngFor="let item of data.list_Options"
+                          [value]="item.id"
+                        >
+                          {{ item.value }}
+                        </mat-option>
+                      </ng-container>
+                    </ng-container>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <mat-form-field
+                appearance="outline"
+                class="w-100 inputfield w-100"
+              >
+                <mat-label>Link to quotation</mat-label>
+                <input
+                  matInput
+                  placeholder="Link to quotation"
+                  name="quotationLink"
+                />
+              </mat-form-field>
+            </div>
+
+            Shipping
+            <div class="row">
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100 inputfield">
+                  <mat-label>Freight and Duty %</mat-label>
+                  <input
+                    matInput
+                    placeholder="Freight and Duty %"
+                    name="freight&Duty"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Inco Terms of Supplier Bid list</mat-label>
+                  <mat-select>
+                    <ng-container *ngFor="let data of list">
+                      <ng-container *ngIf="data.list_Name === 'CurrencyCode'">
+                        <mat-option
+                          *ngFor="let item of data.list_Options"
+                          [value]="item.id"
+                        >
+                          {{ item.value }}
+                        </mat-option>
+                      </ng-container>
+                    </ng-container>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100 inputfield">
+                  <mat-label>Inco Location</mat-label>
+                  <input
+                    matInput
+                    placeholder="IncoLocation"
+                    name="IncoLocation"
+                  />
+                </mat-form-field>
+              </div>
+
+              Terms And Condition
+              <div class="row">
+                <div class="col-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Date of Latest Price Set</mat-label>
+                    <input matInput [matDatepicker]="picker1" />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="picker1"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Price Valid Until Date</mat-label>
+                    <input matInput [matDatepicker]="picker2" />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="picker2"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-4">
+                  <mat-form-field appearance="outline" class="w-100 inputfield">
+                    <mat-label>Annual Escalation %</mat-label>
+                    <input
+                      matInput
+                      placeholder="Annual Escalation %"
+                      name="annualEscalation&Duty"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-4">
+                  <mat-form-field appearance="outline" class="w-100 inputfield">
+                    <mat-label>Forex Exposure</mat-label>
+                    <input
+                      matInput
+                      placeholder="Forex Exposure"
+                      name="forexExposure"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="col-4">
+                  <mat-form-field appearance="outline" class="w-100 inputfield">
+                    <mat-label>Annual Warranty Cost %</mat-label>
+                    <input
+                      matInput
+                      placeholder="Annual Warranty Cost %"
+                      name="annualWarrantyCost"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="col-4">
+                  <mat-form-field appearance="outline" class="w-100 inputfield">
+                    <mat-label>Warranty Argument Months</mat-label>
+                    <input
+                      matInput
+                      placeholder="Warranty Argument Months"
+                      name="warrantyArgumentMonths"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-8">
+                  <mat-form-field appearance="outline" class="w-100 inputfield">
+                    <mat-label>Other Non-B2B T&Cs</mat-label>
+                    <input
+                      matInput
+                      placeholder="Other Non-B2B T&Cs"
+                      name="Other Non-B2B T&Cs"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="col-4">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Payment Terms List</mat-label>
+                    <mat-select>
+                      <ng-container *ngFor="let data of list">
+                        <ng-container *ngIf="data.list_Name === 'PayTerms'">
+                          <mat-option
+                            *ngFor="let item of data.list_Options"
+                            [value]="item.id"
+                          >
+                            {{ item.value }}
+                          </mat-option>
+                        </ng-container>
+                      </ng-container>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+import { Component, Input, OnInit } from '@angular/core';
+import { ResaleService } from '../services/resale-service.service';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+  selector: 'app-details',
+  templateUrl: './details.component.html',
+  styleUrls: ['./details.component.scss']
+})
+export class DetailsComponent implements OnInit {
+  @Input() id : any; 
+
+  DetailsData:any[]=[];
+  dataContainerId: any;
+  matchedData:any;
+
+   constructor(private resaleService: ResaleService, private route: ActivatedRoute) { }
+
+  ngOnInit(): void {
+  
+    this.route.params.subscribe((params:any) => {
+      this.id = params['id'];
+      this.mapIdToDetailsData();
+    });
+
+    this.observeData();
+  
+  }
+
+
+  observeData(){
+    this.resaleService.data.subscribe((val: any) => {
+      this.DetailsData = val;
+      this.mapIdToDetailsData(); 
+    });
+  }
+
+  mapIdToDetailsData(): void {
+    if (this.id && this.DetailsData.length > 0) {
+       this.matchedData = this.DetailsData.find(item => item.DataContainerId == this.id);
+      if (this.matchedData) {
+        this.dataContainerId = this.matchedData;
+      }
+    }
+
+  }
+}
+
+
+
+<div>
+  <div class="resale-summary">
+    <div class="left-side">
+      <div class="title">Resale Summary &gt;</div>
+      <div class="task-number">Task 3</div>
+      <div class="version">v1</div>
+      <div>
+        <i
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+          class="fas fa-pencil pencil-icon"
+       ></i>
+        <div>
+          <app-quotation-form [editData]="matchedData"></app-quotation-form>
+        </div>
+      </div>
+    </div>
+    <div class="right-side">
+      <div class="draft">DRAFT</div>
+      <button class="btn btn-primary" data-bs-dismiss="modal">
+        Save as Draft
+      </button>
+      <button class="btn btn-primary" data-bs-dismiss="modal">Publish</button>
+    </div>
+  </div>
+
+  <!-- <mat-expansion-panel>
+  <mat-expansion-panel-header> Details </mat-expansion-panel-header> -->
+  <div class="row">
+    <h2>Details</h2>
+    <div class="col-12">
+      <mat-card appearance="outlined" class="card">
+        <mat-card-content>
+          <div>
+            <div class="row">
+              <div class="col">
+                <span>Quotation Name</span>
+                <h5>{{ matchedData.QuotationName }}</h5>
+              </div>
+              <div class="col">
+                <span>Supplier Type</span>
+                <h5>{{ matchedData.SupplierName }}</h5>
+              </div>
+              <div class="col">
+                <span>Quotation Description</span>
+                <h5>{{ matchedData.QuotationDescription }}</h5>
+              </div>
+              <div class="col">
+                <span>Supplier Name</span>
+                <h5>{{ matchedData.SupplierName }}</h5>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <span>Supplier Pricing</span>
+                <h5>{{ matchedData.SupplierPricingType }}</h5>
+              </div>
+              <div class="col">
+                <span>{{ matchedData.LobFlag }}</span>
+                <h5>log flag</h5>
+              </div>
+              <div class="col">
+                <span>Cureency of Quotation</span>
+                <h5>{{ matchedData.CurrencyQuotation }}</h5>
+              </div>
+              <div class="col">
+                <span>Country</span>
+                <h5>{{ matchedData.Country }}</h5>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <span>Link to Quotation</span>
+                <h5>{{ matchedData.QuotationLink }}</h5>
+              </div>
+              <div class="col">
+                <span>Freight and Duty %</span>
+                <h5>{{ matchedData.FreightDuty }}</h5>
+              </div>
+              <div class="col">
+                <span>INCO Terms of Supplier Bid</span>
+                <h5>{{ matchedData.INCOTerm }}</h5>
+              </div>
+              <div class="col">
+                <span>INCO Location</span>
+                <h5>{{ matchedData.INCOLocation }}</h5>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <span>Date of latest Price to SE</span>
+                <h5>{{ matchedData.PriceDate }}</h5>
+              </div>
+              <div class="col">
+                <span>Price Valid Until</span>
+                <h5>{{ matchedData.PriceValidDate }}</h5>
+              </div>
+              <div class="col">
+                <span>Annual Escalation % </span>
+                <h5>{{ matchedData.AnnualEscalation }}</h5>
+              </div>
+              <div class="col">
+                <span>Forex Exposure</span>
+                <h5>{{ matchedData.ForexExposure }}</h5>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <span>Annual Warrenty Cost %</span>
+                <h5>{{ matchedData.WarrantyCost }}</h5>
+              </div>
+              <div class="col">
+                <span>Warrenty Arrangement Months</span>
+                <h5>{{ matchedData.Warranty }}</h5>
+              </div>
+              <div class="col">
+                <span> Other non-B2b T&C's </span>
+                <h5>{{ matchedData.OtherTerms }}</h5>
+              </div>
+              <div class="col">
+                <span>Payment Teams</span>
+                <h5>{{ matchedData.PaymentTerms }}</h5>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<!-- <ng-template matExpansionPanelContent> </ng-template>
+</mat-expansion-panel> -->
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { ResaleService } from '../services/resale-service.service';
+
+@Component({
+  selector: 'app-summary-draft',
+  templateUrl: './summary-draft.component.html',
+  styleUrls: ['./summary-draft.component.scss'],
+})
+export class SummaryDraftComponent implements OnInit {
+  displayedColumns: string[] = [
+    'Quotation Name',
+    'Item Count',
+    'Total Excepted Cost',
+    'Total List Price',
+    'Total Net Price',
+  ];
+  summary: any;
+  formData: any = [];
+  constructor(private http: HttpClient, private resaleService: ResaleService) {}
+
+  ngOnInit(): void {
+    this.loadData();
+  }
+
+  loadData() {
+
+    this.http.get('assets/quotation.json').subscribe((res: any) => {
+      this.summary = res.root[0].quotation_Details || [];
+      this.setData();
+    });
+
+  }
+
+  setData() {
+    this.formData = JSON.parse(localStorage.getItem('New Quotation') || '[]');
+    console.log('this.formData');
+    console.log(this.formData);
+    for (let i = 0; i < this.formData?.length; i++) {
+     // console.log(i + 3);
+      const newQuotationDetails = {
+        DataContainerId: i + 3,
+        QuotationName:
+          this.formData[i]?.quotation_Details[0]?.quotationName || '',
+        SupplierName: this.formData[i]?.quotation_Details[0]?.supplierName,
+
+        Interco: this.formData[i]?.quotation_Details[0]?.incoTerms,
+        QuotationDescription:
+          this.formData[i]?.quotation_Details[0]?.quotationDescription,
+        QuotationLink: this.formData[i]?.quotation_Details[0]?.quotationLink,
+        SupplierType:this.formData[i]?.quotation_Details[0].supplierType,
+        SupplierPricingType:
+          this.formData[i]?.quotation_Details[0]?.supplierPricing,
+          LobFlag:this.formData[i]?.quotation_Details[0].lobFlag,
+        CurrencyQuotation:
+          this.formData[i]?.quotation_Details[0]?.CurrencyQuotation,
+        FreightDuty: this.formData[i]?.quotation_Details[0]?.freightDuty || '',
+        Country:
+          this.formData[i]?.quotation_Details[0]?.countryLocation || '',
+        PriceDate:
+          this.formData[i]?.quotation_Details[0]?.latestPriceSetDate || '',
+
+        PriceValidDate:
+          this.formData[i]?.quotation_Details[0]?.priceValidUntilDate || '',
+         AnnualEscalation:
+          this.formData[i]?.quotation_Details[0]?.annualEscalationandDuty || 0,
+          INCOTerm: this.formData[i]?.quotation_Details[0]?.incoSupplierTerm,
+        INCOLocation:
+          this.formData[i]?.quotation_Details[0]?.incoLocation || '',
+        Warranty:
+          this.formData[i]?.quotation_Details[0]?.WarrentyArgumentMonths || '',
+        WarrantyCost:
+          this.formData[i]?.quotation_Details[0]?.annualWarrantyCost || 0,
+        PaymentTerms: this.formData[i]?.quotation_Details[0]?.payTerms || '',
+        ForexExposure:
+          this.formData[i]?.quotation_Details[0]?.forexExposure || '',
+        OtherTerms: this.formData[i]?.quotation_Details[0]?.otherTerms || '',
+        groupStatus: this.formData[i].OperationType,
+        SummaryCount: 0,
+        TotalCost: 0,
+        TotalExpectationCost: 0,
+        isActive: false,
+      };
+      this.summary.push(newQuotationDetails);
+      this.resaleService.detailsData(this.summary);
+      console.log(newQuotationDetails);
+    }
+    
+    console.log('summary ', this.summary);
+  
+  }
+
+}

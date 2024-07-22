@@ -1,0 +1,155 @@
+.card {
+    // align-items: center;
+    border-radius: 7px;
+    border-top: 4px solid #3dcd58;
+    //margin: 8px;
+    // margin-top: 10px;
+    padding: 5px 10px;
+    padding-bottom: 12px;
+    margin-bottom: 10px;
+    //padding: 10px 5px ;
+    box-shadow: 1px 1px 2px 1px rgb(238, 235, 235); // right botton
+  }
+  
+  .title,
+  .pencil {
+    // display: flex;
+    letter-spacing: 1px;
+    // align-items: center;
+    color: #3dcd58;
+    font-weight: 650;
+    margin: 16px 0 0px 0;
+    cursor: pointer;
+  }
+ 
+  
+  // .title-resale {
+  //   display: flex;
+  //   align-items: center;
+  //   font-weight: bold;
+  //   font-size: 1.125rem !important;
+  // }
+  
+  img {
+    height: 20px;
+    width: 20px;
+    margin: 4px;
+    cursor: pointer;
+  }
+  
+  .rowStyle {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    // border-bottom: 1px solid rgb(226, 228, 222);
+    height: 45px;
+  }
+  
+  .noRecord {
+    display: flex;
+    justify-content: center;
+    color: grey;
+    font-size: medium;
+  }
+  
+  
+  h4 {
+    font-weight: 500;
+  }
+  
+  mat-card {
+    padding-top: 1 !important;
+  }
+  
+ 
+  
+  button {
+    //height: 30px;
+    align-items: center;
+    font-size: 14px;
+    border: none;
+    background-color: #3dcd58;
+  }
+  
+  .buttons {
+    display: flex;
+    align-items: flex-end;
+    margin-left: 82%;
+    gap: 15px;
+    margin-top: 10px;
+  }
+  
+  .summary {
+    // height: calc(100vh - 80px - 70px);
+  
+    // overflow: hidden;
+    // overflow-y: scroll;
+  }
+  
+  .cards {
+    // height: calc((100vh - 80px - 70px) / 2);
+    // overflow: hidden;
+    // overflow-y: scroll;
+    // margin:10px;
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+  
+  .deleteData {
+    width: 85%;
+    top: 5px;
+    text-decoration: Line-through;
+    position: absolute;
+    top: 40%;
+  
+    background-color: black;
+    height: 2px;
+  }
+  
+  .pencil {
+    cursor: pointer;
+    color: grey;
+    // margin-top: 16px;
+    // margin: 16px 0 16px 0;
+    // margin-bottom: 18px;
+  }
+  
+  .resale-quotation {
+    display: flex;
+  
+    padding-left: 10px;
+    height: 40px;
+   
+    align-items: center;
+    border-bottom: 1px solid rgb(223, 223, 223);
+  
+    .resale-title {
+      color: black;
+      font-weight: 5500;
+  
+      font-size: 16px !important;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  }
+  
+  .crossOnDelete {
+    // padding-top: 17px;
+    // padding-left: 5px;
+    margin-top: -25px;
+    color: red;
+    width: 25px;
+  
+    margin-left: -9px;
+    height: 30px;
+    border-radius: 5px;
+  }
+  
+  a {
+    color: black;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    color: #3dcd58;
+  }
+  

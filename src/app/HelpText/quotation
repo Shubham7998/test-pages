@@ -1,0 +1,33 @@
+  updateLocalData(updatedData: any) {
+    let storedData = localStorage.getItem('New Quotation');
+    console.log('storedData', storedData);
+
+    if (storedData) {
+      let dataArray = JSON.parse(storedData);
+      console.log('dataarr', dataArray);
+      const index = dataArray.findIndex(
+        (item: any) => item.DataContainerId == this.Id  && item.OperationType === this.groupStatus
+      );
+      console.log("index",index);
+
+      if (index !== -1) {
+        storedData.slice(index, 1);
+        console.log('storedData');
+
+        dataArray[index].quotation_Details = [updatedData];
+
+        console.log('updatedData', updatedData);
+        localStorage.clear();
+
+        localStorage.setItem('New Quotation', JSON.stringify(dataArray));
+
+        console.log('Updated JSON Data   :', dataArray);
+      } else {
+        console.log('dataContainerId not found.');
+      }
+    } else {
+      console.log('No data  in localStorage.');
+    }
+  }
+//now what happend draft card and publish card has same id ohk then
+        // i edited the draft data has some updated values and that draft id  i will publish so publish has alredy that id so it is not updating his values with draft one

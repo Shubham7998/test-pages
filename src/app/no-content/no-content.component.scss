@@ -1,0 +1,38 @@
+.no-content-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ 
+ 
+  text-align: center;
+  color: #343a40;
+}
+
+.no-content {
+  max-width: 600px;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.no-content h1 {
+  font-size: 6rem;
+  margin-bottom: 0.5rem;
+}
+
+.no-content h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.no-content p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.no-content .btn {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+}

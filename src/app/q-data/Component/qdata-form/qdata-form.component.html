@@ -1,0 +1,60 @@
+
+<div
+class="modal fade"
+id="exampleModal"
+tabindex="-1"
+aria-labelledby="exampleModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header header">
+      <h2 class="modal-title fs-5" style="color: #3dcd58;;" id="exampleModalLabel">EDIT Q-DATA</h2>
+      <button
+        id="closeBtn"
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+        
+      ></button>
+    </div>
+    <div class="modal-body">
+    <mat-form-field appearance="outline" class="w-100 input-field">
+        <mat-label>Q-Data Name</mat-label>
+        <input
+          class="small-input"
+          matInput
+          name="quotationName"
+          
+          required
+        />
+       
+      </mat-form-field>
+
+      <mat-form-field
+      appearance="outline"
+      class="example-full-width w-100"
+    >
+      <mat-label> Q-Data Description</mat-label>
+      <textarea
+        matInput
+        class="custom-textarea"
+       style="resize: none;"
+        rows="3"
+      ></textarea>
+     
+    </mat-form-field>
+    <div class="modal-footer  m-0 pt-0 pb-0 footer">
+        <button
+          type="submit"
+         
+          class=" save"
+        >
+        Apply changes
+        </button>
+      </div>
+</div>
+</div>
+</div>
+</div>

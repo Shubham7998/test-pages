@@ -1,0 +1,38 @@
+.container {
+  align-items: center;
+  border-radius: 7px;
+  border-top: 4px solid #3dcd58;
+  padding: 2px;
+  margin: 20px;
+  box-shadow: 1px 1px 2px 1px rgb(231, 231, 231);
+}
+
+
+
+
+
+h5 {
+  font-weight:600;
+  
+  font-size: 14px;
+  color: rgb(36, 36, 36);
+
+}
+
+span{
+font-weight: 450;  
+word-break: break-word;
+}
+
+
+
+mat-expansion-panel-header {
+  color: #3dcd58;
+  font-size: 20px;
+  align-items: left;
+  font-weight: 500;
+}
+
+.details {
+  height: calc(100vh - 80px - 97px);
+}

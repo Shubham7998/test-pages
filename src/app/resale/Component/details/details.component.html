@@ -1,0 +1,142 @@
+<div class="details">
+  <div class="summary">
+    <div class="left-side">
+       <a class="title" [routerLink]="['/resale/summary']">Resale Summary </a>
+        <!--     <div class="task-number">{{ matchedData?.QuotationName }}</div> -->
+      <!-- <div class="title">Resale Summary &gt;</div> -->
+      <div class="task-number"> > {{ matchedData?.QuotationName }}</div>
+
+      <div class="version">v1</div>
+      <div>
+        <i
+          data-bs-toggle="modal"
+          style="cursor: pointer;color: grey;"
+          data-bs-target="#exampleModal"
+          class="fas fa-pencil pencil-icon fs-6 "
+        ></i>
+        <div>
+          <app-quotation-form [editData]="matchedData" ></app-quotation-form>
+          <!-- <app-quotation-form [editData]="matchedData" [checkIsChangeDetected]="checkIsChangeDetected"></app-quotation-form> -->
+        </div>
+      </div>
+    </div>
+    <div class="right-side">
+      <div class="status">{{ groupStatus | uppercase }}</div>
+      <button class="btn btn-primary" (click)="status('Draft')">
+        Save as Draft
+      </button>
+      <button class="btn btn-primary" (click)="status('Publish')">
+        Publish
+      </button>
+    </div>
+  </div>
+
+  <!-- <mat-expansion-panel>
+  <mat-expansion-panel-header> Details </mat-expansion-panel-header> -->
+  <div style="margin-left: 10px; margin-right: 10px;">
+
+
+  <div class="row">
+    <label class="heading" >Details</label> 
+    <div class="col-12">
+      <mat-card appearance="outlined" class="card">
+        <mat-card-content>
+          <div>
+            <div class="row">
+              <div class="col">
+                <span>Quotation Name</span>
+                <h5>{{ matchedData?.QuotationName }}</h5>
+              </div>
+              <div class="col">
+                <span>Supplier Type</span>
+                <h5>{{ matchedData?.SupplierName }}</h5>
+              </div>
+              <div class="col">
+                <span>Quotation Description</span>
+                <h5>{{ matchedData?.QuotationDescription }}</h5>
+              </div>
+              <div class="col">
+                <span>Supplier Name</span>
+                <h5>{{ matchedData?.SupplierName }}</h5>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <span>Supplier Pricing</span>
+                <h5>{{ matchedData?.SupplierPricingType }}</h5>
+              </div>
+              <div class="col">
+                <span>log flag</span>
+                <h5>{{ matchedData?.LobFlag }}</h5>
+              </div>
+              <div class="col">
+                <span>Cureency of Quotation</span>
+                <h5>{{ matchedData?.CurrencyQuotation }}</h5>
+              </div>
+              <div class="col">
+                <span>Country</span>
+                <h5>{{ matchedData?.Country }}</h5>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <span>Link to Quotation</span>
+                <h5 style="color: #3dcd58">{{ matchedData?.QuotationLink }}</h5>
+              </div>
+              <div class="col">
+                <span>Freight and Duty %</span>
+                <h5>{{ matchedData?.FreightDuty }}</h5>
+              </div>
+              <div class="col">
+                <span>INCO Terms of Supplier Bid</span>
+                <h5>{{ matchedData?.INCOTerm }}</h5>
+              </div>
+              <div class="col">
+                <span>INCO Location</span>
+                <h5>{{ matchedData?.INCOLocation }}</h5>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <span>Date of latest Price to SE</span>
+                <h5>{{ matchedData?.PriceDate | date : "d MMM yyyy" }}</h5>
+              </div>
+              <div class="col">
+                <span>Price Valid Until</span>
+                <h5>{{ matchedData?.PriceValidDate | date : "d MMM yyyy" }}</h5>
+              </div>
+              <div class="col">
+                <span>Annual Escalation % </span>
+                <h5>{{ matchedData?.AnnualEscalation }}</h5>
+              </div>
+              <div class="col">
+                <span>Forex Exposure</span>
+                <h5>{{ matchedData?.ForexExposure }}</h5>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <span>Annual Warrenty Cost %</span>
+                <h5>{{ matchedData?.WarrantyCost }}</h5>
+              </div>
+              <div class="col">
+                <span>Warrenty Arrangement Months</span>
+                <h5>{{ matchedData?.Warranty }}</h5>
+              </div>
+              <div class="col">
+                <span> Other non-B2b T&C's </span>
+                <h5>{{ matchedData?.OtherTerms }}</h5>
+              </div>
+              <div class="col">
+                <span>Payment Teams</span>
+                <h5>{{ matchedData?.PaymentTerms }}</h5>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<!-- <ng-template matExpansionPanelContent> </ng-template>
+</mat-expansion-panel> -->

@@ -1,0 +1,68 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { AppComponent } from './app.component';
+import { NavComponent } from './nav/nav.component';
+import { LayoutComponent } from './layout/layout.component';
+import { OpportunityComponent } from './opportunity/opportunity.component';
+import { SummaryComponent } from './summary/summary.component';
+import { QuotationFormComponent } from './quotation-form/quotation-form.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: LayoutComponent,
+
+    children: [
+      {
+        path:"oppportunity",
+        component:OpportunityComponent,
+        children:[
+
+          {
+            path: 'opportunity/identifiers?opportunityID',
+            component: OpportunityComponent,
+          },
+          {
+            path: 'opportunity/identifiers?opportunityID/:id',
+            component: OpportunityComponent,
+          }
+        ]
+      },
+
+      {
+        path:"resale",
+        component:SummaryComponent,
+        children:[
+          {
+            path:"resale/summary/quotationId/:Id",
+            component:SummaryComponent,
+          },
+
+          
+        ]
+      }
+
+     
+
+    ],
+
+    
+  },
+
+  {
+    path:"summary",
+    component:SummaryComponent
+  },
+  {
+    path:"quotationForm",
+    component:QuotationFormComponent
+  },
+ 
+];
+
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}

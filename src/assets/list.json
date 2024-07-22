@@ -1,0 +1,463 @@
+{
+  "code":200,
+  "root":[
+  {
+  "list_Name":"Supplier_Pricing_Type",
+  "list_ID":29,
+  "list_Options":[
+  {
+  "id":1,
+  "value":"Budget Quotation"
+  },
+  {
+  "id":2,
+  "value":"Quotation"
+  },
+  {
+  "id":3,
+  "value":"Confirmed Negotiation"
+  },
+  {
+  "id":4,
+  "value":"Global Supply Agreement"
+  },
+  {
+  "id":5,
+  "value":"Regional Supply Agreement"
+  },
+  {
+  "id":6,
+  "value":"Local Supply Agreement"
+  }
+  ]
+  },
+  {
+  "list_Name":"Vendor_Bid_Term",
+  "list_ID":30,
+  "list_Options":[
+  {
+  "id":1,
+  "value":"FCA\u00A0 - Free Carrier"
+  },
+  {
+  "id":2,
+  "value":"CPT\u00A0 - Carriage Paid to"
+  },
+  {
+  "id":3,
+  "value":"CIP -\u00A0 Carriage and Insurance Paid To"
+  },
+  {
+  "id":4,
+  "value":"DAP - Delivered at Place"
+  }
+  ]
+  },
+  {
+  "list_Name":"Vendor",
+  "list_ID":31,
+  "list_Options":[
+  {
+  "id":1,
+  "value":"Stahl Automation"
+  },
+  {
+  "id":2,
+  "value":"Pepperl + Fuchs"
+  },
+  {
+  "id":3,
+  "value":"Measurement Technology Limited"
+  },
+  {
+  "id":4,
+  "value":"Phoenix Contact"
+  },
+  {
+  "id":5,
+  "value":"G. M. International s.r.l."
+  },
+  {
+  "id":6,
+  "value":"Bechtle"
+  },
+  {
+  "id":7,
+  "value":"Other"
+  }
+  ]
+  },
+  {
+  "list_Name":"CurrencyCode",
+  "list_ID":32,
+  "list_Options":[
+  {
+  "id":1,
+  "value":"AED"
+  },
+  {
+  "id":2,
+  "value":"AOA"
+  },
+  {
+  "id":29,
+  "value":"MAD"
+  },
+  {
+  "id":30,
+  "value":"MNT"
+  },
+  {
+  "id":63,
+  "value":"IRR"
+  },
+  {
+  "id":64,
+  "value":"KRW"
+  },
+  {
+  "id":71,
+  "value":"EUR"
+  }
+  ]
+  },
+  {
+  "list_Name":"PayTerms",
+  "list_ID":34,
+  "list_Options":[
+  {
+  "id":1,
+  "value":"30"
+  },
+  {
+  "id":2,
+  "value":"60"
+  },
+  {
+  "id":3,
+  "value":"Other"
+  }
+  ]
+  },
+  {
+  "list_Name":"ResaleCategory",
+  "list_ID":35,
+  "list_Options":[
+  {
+  "id":1,
+  "value":"Usual Architecture Components"
+  },
+  {
+  "id":2,
+  "value":"Subcontracted Services"
+  },
+  {
+  "id":3,
+  "value":"Engineered ITEMs"
+  },
+  {
+  "id":4,
+  "value":"Potentially"
+  }
+  ]
+  },
+  {
+  "list_Name":"LOB_Flag",
+  "list_ID":61,
+  "list_Options":[
+  {
+  "id":0,
+  "value":"PA"
+  },
+  {
+  "id":1,
+  "value":"Cyber"
+  },
+  {
+  "id":2,
+  "value":"FD"
+  },
+  {
+  "id":3,
+  "value":"Services"
+  },
+  {
+  "id":4,
+  "value":"Software"
+  },
+  {
+  "id":5,
+  "value":"Other SE"
+  }
+  ]
+  },
+  {
+  "list_Name":"Supplier_Type",
+  "list_ID":62,
+  "list_Options":[
+  {
+  "id":0,
+  "value":"Resale"
+  },
+  {
+  "id":1,
+  "value":"SE Interco"
+  },
+  {
+  "id":2,
+  "value":"Software"
+  }
+  ]
+  },
+  {
+    "list_Name": "Country Location",
+    "list_ID": null,
+    "list_Options": [
+      {
+        "id": 134,
+        "value": "Antarctica"
+      },
+      {
+        "id": 131,
+        "value": "Antigua and Barbuda"
+      },
+      {
+        "id": 2,
+        "value": "ARGENTINA"
+      },
+      {
+        "id": 92,
+        "value": "Armenia"
+      },
+      {
+        "id": 136,
+        "value": "Aruba"
+      },
+      {
+        "id": 4,
+        "value": "AUSTRALIA"
+      },
+      {
+        "id": 3,
+        "value": "AUSTRIA"
+      },
+      {
+        "id": 93,
+        "value": "Azerbaijan"
+      },
+      {
+        "id": 145,
+        "value": "Bahamas (the)"
+      },
+      {
+        "id": 7,
+        "value": "BAHRAIN"
+      },
+      {
+        "id": 94,
+        "value": "Bangladesh"
+      },
+      {
+        "id": 138,
+        "value": "Barbados"
+      },
+      {
+        "id": 9,
+        "value": "BRAZIL"
+      },
+      {
+        "id": 184,
+        "value": "British Indian Ocean Territory (the)"
+      },
+      {
+        "id": 96,
+        "value": "Brunei Darussalam"
+      },
+      {
+        "id": 6,
+        "value": "BULGARIA"
+      },
+      {
+        "id": 139,
+        "value": "Burkina Faso"
+      },
+      {
+        "id": 140,
+        "value": "Burundi"
+      },
+      {
+        "id": 19,
+        "value": "EEC-ARGENTINA"
+      },
+      {
+        "id": 89,
+        "value": "EEC-BANGALORE"
+      },
+      {
+        "id": 21,
+        "value": "EEC-CHINA"
+      },
+      {
+        "id": 23,
+        "value": "EEC-EGYPT"
+      },
+      {
+        "id": 25,
+        "value": "EEC-INDIA"
+      },
+      {
+        "id": 26,
+        "value": "EEC-MEXICO"
+      },
+      {
+        "id": 28,
+        "value": "EEC-SLOVAKIA"
+      },
+      {
+        "id": 24,
+        "value": "EGYPT"
+      },
+      {
+        "id": 237,
+        "value": "El Salvador"
+      },
+      {
+        "id": 176,
+        "value": "Equatorial Guinea"
+      },
+      {
+        "id": 162,
+        "value": "Eritrea"
+      },
+      {
+        "id": 30,
+        "value": "FRANCE"
+      },
+      {
+        "id": 169,
+        "value": "French Guiana"
+      },
+      {
+        "id": 219,
+        "value": "French Polynesia"
+      },
+      {
+        "id": 242,
+        "value": "French Southern Territories (the)"
+      },
+      {
+        "id": 41,
+        "value": "ITALY"
+      },
+      {
+        "id": 187,
+        "value": "Jamaica"
+      },
+      {
+        "id": 42,
+        "value": "JAPAN"
+      },
+      {
+        "id": 186,
+        "value": "Jersey"
+      },
+      {
+        "id": 108,
+        "value": "Jordan"
+      },
+      {
+        "id": 46,
+        "value": "KAZAKHSTAN"
+      },
+      {
+        "id": 49,
+        "value": "LATVIA"
+      },
+      {
+        "id": 112,
+        "value": "Lebanon"
+      },
+      {
+        "id": 197,
+        "value": "Lesotho"
+      },
+      {
+        "id": 196,
+        "value": "Liberia"
+      },
+      {
+        "id": 199,
+        "value": "Libya"
+      },
+      {
+        "id": 195,
+        "value": "Liechtenstein"
+      },
+      {
+        "id": 114,
+        "value": "Macedonia"
+      },
+      {
+        "id": 115,
+        "value": "Madagascar"
+      },
+      {
+        "id": 211,
+        "value": "Malawi"
+      },
+      {
+        "id": 54,
+        "value": "MALAYSIA"
+      },
+      {
+        "id": 210,
+        "value": "Maldives"
+      },
+      {
+        "id": 205,
+        "value": "Mali"
+      },
+      {
+        "id": 209,
+        "value": "Malta"
+      },
+      {
+        "id": 204,
+        "value": "Marshall Islands (the)"
+      },
+      {
+        "id": 116,
+        "value": "Martinique"
+      },
+  
+      {
+        "id": 50,
+        "value": "MOROCCO"
+      },
+      {
+        "id": 212,
+        "value": "Mozambique"
+      },
+      {
+        "id": 51,
+        "value": "MYANMAR (BURMA)"
+      },
+      {
+        "id": 213,
+        "value": "Namibia"
+      },
+      {
+        "id": 217,
+        "value": "Nauru"
+      },
+      {
+        "id": 216,
+        "value": "Nepal"
+      }
+    ]
+  }
+  
+  ],
+  "messages":""
+  }
+  
